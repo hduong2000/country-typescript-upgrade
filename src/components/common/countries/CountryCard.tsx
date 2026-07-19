@@ -20,12 +20,16 @@ export default function CountryCard({ country }: CountryCardProps) {
       ? Object.values(country.capital[0])[0]?.name
       : "N/A";
 
-  const { addFavorite, removeFavorite, isFavorite } = useCountryStore();
-  const favoriteCheck = isFavorite(country.codes.alpha_3);
+  const { addFavorite, removeFavorite } = useCountryStore();
+  const favorites = useCountryStore((state) => state.favorites);
+  const favoriteCheck = favorites.some(
+    (fav) => fav.codes.alpha_3 === country.codes.alpha_3,
+  );
 
+  //   const favoriteCheck = useCountryStore((state) =>
+  //   state.favorites.some((fav) => fav.codes.alpha_3 === country.codes.alpha_3)
+  // );
   const handleFavoriteClick = (e: React.MouseEvent) => {
-    console.log('click');
-    
     e.stopPropagation();
     if (favoriteCheck) {
       removeFavorite(country.codes.alpha_3);
@@ -45,7 +49,11 @@ export default function CountryCard({ country }: CountryCardProps) {
         className="absolute top-3 right-3 p-2 rounded-full bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm shadow-sm hover:scale-110 transition-transform z-10"
       >
         <Heart
-          className={favoriteCheck ? "fill-red-500 text-red-500" : "text-gray-400 dark:text-gray-500"}
+          className={
+            favoriteCheck
+              ? "fill-red-500 text-red-500"
+              : "text-gray-400 dark:text-gray-500"
+          }
         />
       </button>
 
